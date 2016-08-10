@@ -1,0 +1,33 @@
+{
+  "name": "cuid-runner",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://drone.stackdot.com/api/badges/stackdot/cuid-runner/status.svg)](https://drone.stackdot.com/stackdot/cuid-runner) [![dependencies Status](https://david-dm.org/stackdot/cuid-runner/status.svg)](https://david-dm.org/stackdot/cuid-runner)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stackdot/cuid-runner.git"
+  },
+  "author": "Quinton Pike",
+  "license": "ISC",
+  "engineStrict": true,
+  "engines": {
+    "node": ">6.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/stackdot/cuid-runner/issues"
+  },
+  "homepage": "https://github.com/stackdot/cuid-runner#readme",
+  "dependencies": {
+    "async": "^2.0.1",
+    "colors": "^1.1.2",
+    "debug": "^2.2.0",
+    "dockerode": "^2.3.0",
+    "kue": "^0.11.1",
+    "lodash": "^4.14.2",
+    "mongoose": "^4.5.8",
+    "q": "^1.4.1"
+  }
+}

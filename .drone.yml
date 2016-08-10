@@ -1,0 +1,26 @@
+build:
+  image: node:6.3.1
+  pull: true
+  commands:
+    - npm update
+#    - npm test
+
+
+
+publish:
+  docker:
+    repo: stackdot/cuid-runner
+    tag:
+      - '$${BRANCH/master/latest}'
+      - '$$BRANCH.$$BUILD_NUMBER'
+    registry: registry.hub.docker.com
+    username: $$DOCKERHUB_USER
+    password: $$DOCKERHUB_PASSWORD
+    email: qrpike@stackdot.com
+    storage_driver: overlay
+
+
+
+cache:
+  mount:
+    - node_modules
