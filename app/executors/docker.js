@@ -25,7 +25,7 @@ module.exports = class Docker extends Executor {
 
 		// Check docker is working:
 		let stats = fs.statSync( DOCKER_SOCKET )
-		if(!stats.isSocket()) return this.error('DOCKER ISNT RUNNING ( Check the socket )')
+		if(!stats.isSocket()) return this.error( 'DOCKER ISNT RUNNING ( Check the socket )' )
 
 		// Create docker connection:
 		this.docker = new DockerLib({
@@ -33,7 +33,8 @@ module.exports = class Docker extends Executor {
 		})
 
 		// Execute the task:
-		this.job.log('Docker connection made')
+		this.job.log( 'Docker connection made' )
+		this.job.progress( 1, 5 )
 		this.pullImage()
 			.then( this.runImage.bind( this ) )
 			.then( this.updateRecords.bind( this ) )
@@ -48,9 +49,11 @@ module.exports = class Docker extends Executor {
 			write: ( chunk, encoding, next )=>{
 				const str = chunk.toString()
 				lodash.each( str.split(/\r|\n/), ( s ) => {
-					if( !lodash.isEmpty( s ) ) self.job.log( s )
+					if( !lodash.isEmpty( s ) ){
+						self.job.log( s )
+						self.debug( s.info )
+					}
 				})
-				self.debug( 'output', '\n', str )
 				next()
 			}
 		})
@@ -58,7 +61,7 @@ module.exports = class Docker extends Executor {
 
 
 	updateRecords(){
-
+		this.job.progress( 5, 5 )
 		this.done( '[Docker Completed]' )
 	}
 
@@ -75,7 +78,13 @@ module.exports = class Docker extends Executor {
 			lodash.flatten([this.executorMeta.cmd]),
 			this.writeStream(),
 			{},
-			deferred.makeNodeResolver()
+			( err, data ) => {
+				if(err) return deferred.reject( err )
+				this.job.log( '-------------------------' )
+				this.job.log('[Container Done]')
+				this.job.progress( 4, 5 )
+				deferred.resolve( data )
+			}
 		)
 
 		return deferred.promise
@@ -84,7 +93,6 @@ module.exports = class Docker extends Executor {
 
 
 	pullImage(){
-		// console.log('META:', JSON.stringify( this.meta, null, 4 ) )
 
 		const deferred = Q.defer()
 
@@ -104,10 +112,13 @@ module.exports = class Docker extends Executor {
 		this.docker.pull( this.executorMeta.image, options, ( err, stream ) => {
 			if(err) return deferred.reject( err )
 
+			this.job.progress( 2, 5 )
+
 			function onFinished( err, output ){
 				this.debug( `Image Finished Pulling`.debug )
 				if(err) return deferred.reject( err )
 				this.job.log('Done pulling image')
+				this.job.progress( 3, 5 )
 				deferred.resolve( output )
 			}
 
