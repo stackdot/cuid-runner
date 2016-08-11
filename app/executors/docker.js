@@ -46,7 +46,7 @@ module.exports = class Docker extends Executor {
 	writeStream(){
 		let self = this
 		return Stream.Writable({
-			write: ( chunk, encoding, next )=>{
+			write: ( chunk, encoding, next ) => {
 				const str = chunk.toString()
 				lodash.each( str.split(/\r|\n/), ( s ) => {
 					if( !lodash.isEmpty( s ) ){
